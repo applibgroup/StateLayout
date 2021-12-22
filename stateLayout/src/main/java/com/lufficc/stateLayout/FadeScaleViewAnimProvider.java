@@ -1,41 +1,38 @@
-package com.lufficc.stateLayout;
+package com.lufficc.statelayout;
 
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
+
+import ohos.agp.animation.Animator;
+import ohos.agp.animation.AnimatorProperty;
 
 /**
  * Created by lufficc on 2016/8/26.
  */
-
 public class FadeScaleViewAnimProvider implements ViewAnimProvider {
 
-    public Animation showAnimation() {
-        AnimationSet set = new AnimationSet(true);
-        Animation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        Animation scaleAnimation = new ScaleAnimation(0.1f, 1f, 0.1f, 1f,Animation.RELATIVE_TO_SELF,
-                0.5f, Animation.RELATIVE_TO_SELF,0.5f);
+    @Override
+    public AnimatorProperty showAnimation() {
+        return new AnimatorProperty()
+                .alphaFrom(0.f)
+                .alpha(1.0f)
+                .scaleXFrom(0.1f)
+                .scaleX(1f)
+                .scaleYFrom(0.1f)
+                .scaleY(1f)
+                .setDuration(200)
+                .setCurveType(Animator.CurveType.DECELERATE);
 
-        set.setDuration(200);
-        set.setInterpolator(new DecelerateInterpolator());
-        set.addAnimation(alphaAnimation);
-        set.addAnimation(scaleAnimation);
-        return set;
     }
 
     @Override
-    public Animation hideAnimation() {
-        AnimationSet set = new AnimationSet(true);
-        Animation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        Animation scaleAnimation = new ScaleAnimation(1.0f, 0.1f, 1.0f, 0.1f,Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF,0.5f);
-
-        set.setDuration(200);
-        set.setInterpolator(new DecelerateInterpolator());
-        set.addAnimation(alphaAnimation);
-        set.addAnimation(scaleAnimation);
-        return set;
+    public AnimatorProperty hideAnimation() {
+        return new AnimatorProperty()
+                .alphaFrom(1.0f)
+                .alpha(0.0f)
+                .scaleXFrom(1f)
+                .scaleX(0.1f)
+                .scaleYFrom(1f)
+                .scaleY(0.1f)
+                .setDuration(200)
+                .setCurveType(Animator.CurveType.DECELERATE);
     }
 }

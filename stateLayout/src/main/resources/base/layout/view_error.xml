@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:error_content"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:alignment="center"
+    ohos:orientation="vertical">
+
+    <Image
+        ohos:id="$+id:errorImageView"
+        ohos:height="$float:image_size"
+        ohos:width="$float:image_size"
+        ohos:image_src="$media:ic_state_layout_empty"
+        ohos:top_margin="-56vp"
+        />
+    <Text
+        ohos:id="$+id:errorTextView"
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:start_margin="50vp"
+        ohos:end_margin="50vp"
+        ohos:top_padding="5vp"
+        ohos:bottom_padding="5vp"
+        ohos:text="Error"
+        ohos:text_color="#33475f"
+        ohos:text_size="$float:text_size"
+        />
+    <Text
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:padding="5vp"
+        ohos:text="Retry"
+        ohos:text_color="#727272"
+        ohos:text_size="$float:text_sm_size"
+        />
+</DirectionalLayout>

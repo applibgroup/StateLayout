@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:padding="16vp">
+
+
+    <com.lufficc.statelayout.StateLayout
+        ohos:id="$+id:stateLayout"
+        ohos:height="0"
+        ohos:width="match_content"
+        ohos:layout_alignment="center"
+        ohos:weight="1">
+
+        <DirectionalLayout
+            ohos:height="match_parent"
+            ohos:width="match_parent"
+            ohos:alignment="center">
+
+            <Image
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:image_src="$media:avatar"
+                ohos:layout_alignment="horizontal_center"/>
+
+            <Text
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:multiple_lines="true"
+                ohos:text="Hello World! I am content view."
+                ohos:text_size="$float:text_size"
+                />
+        </DirectionalLayout>
+
+    </com.lufficc.statelayout.StateLayout>
+
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal">
+
+        <DirectionalLayout
+            ohos:height="match_content"
+            ohos:width="0"
+            ohos:weight="1">
+
+            <Button
+                ohos:id="$+id:error"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:end_margin="10vp"
+                ohos:multiple_lines="true"
+                ohos:text="Error"
+                ohos:text_size="$float:text_size"/>
+
+            <Button
+                ohos:id="$+id:empty"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:end_margin="10vp"
+                ohos:multiple_lines="true"
+                ohos:text="empty"
+                ohos:text_size="$float:text_size"/>
+
+            <Button
+                ohos:id="$+id:progress"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:end_margin="10vp"
+                ohos:multiple_lines="true"
+                ohos:text="progress"
+                ohos:text_size="$float:text_size"/>
+
+            <Button
+                ohos:id="$+id:content"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:end_margin="10vp"
+
+                ohos:multiple_lines="true"
+                ohos:text="content"
+                ohos:text_size="$float:text_size"/>
+        </DirectionalLayout>
+
+        <DirectionalLayout
+            ohos:height="match_content"
+            ohos:width="0"
+            ohos:weight="1">
+
+            <Button
+                ohos:id="$+id:fade"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:end_margin="10vp"
+                ohos:multiple_lines="true"
+                ohos:text="fade"
+                ohos:text_size="$float:text_size"/>
+
+            <Button
+                ohos:id="$+id:fade_scale"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:end_margin="10vp"
+                ohos:multiple_lines="true"
+                ohos:text="fade_scale"
+                ohos:text_size="$float:text_size"/>
+        </DirectionalLayout>
+    </DirectionalLayout>
+
+
+</DirectionalLayout>

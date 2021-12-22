@@ -1,150 +1,161 @@
-package com.lufficc.stateLayout;
+package com.lufficc.statelayout;
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import com.lcc.stateLayout.R;
+import ohos.agp.animation.Animator;
+import ohos.agp.animation.AnimatorProperty;
+import ohos.agp.components.AttrSet;
+import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
+import ohos.agp.components.Image;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.ProgressBar;
+import ohos.agp.components.StackLayout;
+import ohos.agp.components.Text;
+import ohos.agp.components.element.Element;
+import ohos.app.Context;
 
 
 /**
  * Created by lcc_luffy on 2016/1/30.
  */
-public class StateLayout extends FrameLayout {
-    private View contentView;
+public class StateLayout extends StackLayout {
+    private Component contentView;
 
-    private View emptyView;
-    private View emptyContentView;
+    private Component emptyView;
 
-    private View errorView;
-    private View errorContentView;
+    private Component errorView;
 
-    private View progressView;
-    private View progressContentView;
+    private Component progressView;
 
-    private TextView emptyTextView;
-    private TextView errorTextView;
-    private TextView progressTextView;
+    private Text emptyTextView;
+    private Text errorTextView;
+    private Text progressTextView;
 
-    private ImageView errorImageView;
-    private ImageView emptyImageView;
+    private Image errorImageView;
+    private Image emptyImageView;
     private ProgressBar progressBar;
 
-    private View currentShowingView;
-
+    private Component currentShowingView;
 
     public StateLayout(Context context) {
-        this(context, null);
+        super(context);
     }
 
-
-    public StateLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context, attrs);
+    public StateLayout(Context context, AttrSet attrSet) {
+        super(context, attrSet);
+        init(context, attrSet);
     }
 
-    public StateLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context, attrs);
+    public StateLayout(Context context, AttrSet attrSet, String styleName) {
+        super(context, attrSet, styleName);
+        init(context, attrSet);
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    private void init(Context context, AttrSet attrs) {
         parseAttrs(context, attrs);
 
-        emptyView.setVisibility(View.GONE);
+        emptyView.setVisibility(HIDE);
 
-        errorView.setVisibility(View.GONE);
+        errorView.setVisibility(HIDE);
 
-        progressView.setVisibility(View.GONE);
+        progressView.setVisibility(HIDE);
 
         currentShowingView = contentView;
     }
 
-    private void parseAttrs(Context context, AttributeSet attrs) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.StateLayout, 0, 0);
-        int progressViewId;
-        Drawable errorDrawable;
-        Drawable emptyDrawable;
-        try {
-            errorDrawable = a.getDrawable(R.styleable.StateLayout_errorDrawable);
-            emptyDrawable = a.getDrawable(R.styleable.StateLayout_emptyDrawable);
-            progressViewId = a.getResourceId(R.styleable.StateLayout_progressView, -1);
-        } finally {
-            a.recycle();
+    static final class StateLayoutAttrs {
+        private StateLayoutAttrs() {
+            super();
         }
 
-        /******************************************************************************************/
+        public static final String ERROR_DRAWABLE = "errorDrawable";
+
+        public static final String EMPTY_DRAWABLE = "emptyDrawable";
+
+        public static final String PROGRESS_VIEW = "progressView";
+    }
+
+    private void parseAttrs(Context context, AttrSet attrs) {
+        LayoutScatter inflate = LayoutScatter.getInstance(context);
+
+
+        final Element errorDrawable = getElementFromAttr(attrs, StateLayoutAttrs.ERROR_DRAWABLE);
+        final Element emptyDrawable = getElementFromAttr(attrs, StateLayoutAttrs.EMPTY_DRAWABLE);
+        final int progressViewId = -1;
 
         if (progressViewId != -1) {
-            progressView = inflater.inflate(progressViewId, this, false);
+            progressView = inflate.parse(progressViewId, this, false);
         } else {
-            progressView = inflater.inflate(R.layout.view_progress, this, false);
-            progressBar = (ProgressBar) progressView.findViewById(R.id.progress_wheel);
-            progressTextView = (TextView) progressView.findViewById(R.id.progressTextView);
-            progressContentView = progressView.findViewById(R.id.progress_content);
+            progressView = inflate.parse(ResourceTable.Layout_view_progress, this, false);
+            progressBar = (ProgressBar) progressView.findComponentById(ResourceTable.Id_progress_wheel);
+            progressTextView = (Text) progressView.findComponentById(ResourceTable.Id_progressTextView);
         }
 
-        addView(progressView);
-        /******************************************************************************************/
+        addComponent(progressView);
 
-        /******************************************************************************************/
 
-        errorView = inflater.inflate(R.layout.view_error, this, false);
-        errorContentView = errorView.findViewById(R.id.error_content);
-        errorTextView = (TextView) errorView.findViewById(R.id.errorTextView);
-        errorImageView = (ImageView) errorView.findViewById(R.id.errorImageView);
+        errorView = inflate.parse(ResourceTable.Layout_view_error, this, false);
+        errorTextView = (Text) errorView.findComponentById(ResourceTable.Id_errorTextView);
+        errorImageView = (Image) errorView.findComponentById(ResourceTable.Id_errorImageView);
         if (errorDrawable != null) {
-            errorImageView.setImageDrawable(errorDrawable);
+            errorImageView.setImageElement(errorDrawable);
         } else {
-            errorImageView.setImageResource(R.mipmap.ic_state_layout_error);
+            errorImageView.setImageAndDecodeBounds(ResourceTable.Media_ic_state_layout_error);
         }
-        addView(errorView);
-        /******************************************************************************************/
+        addComponent(errorView);
 
-        /******************************************************************************************/
 
-        emptyView = inflater.inflate(R.layout.view_empty, this, false);
-        emptyContentView = emptyView.findViewById(R.id.empty_content);
-        emptyTextView = (TextView) emptyView.findViewById(R.id.emptyTextView);
-        emptyImageView = (ImageView) emptyView.findViewById(R.id.emptyImageView);
+        emptyView = inflate.parse(ResourceTable.Layout_view_empty, this, false);
+        emptyTextView = (Text) emptyView.findComponentById(ResourceTable.Id_emptyTextView);
+        emptyImageView = (Image) emptyView.findComponentById(ResourceTable.Id_emptyImageView);
         if (emptyDrawable != null) {
-            emptyImageView.setImageDrawable(emptyDrawable);
+            emptyImageView.setImageElement(emptyDrawable);
         } else {
-            emptyImageView.setImageResource(R.mipmap.ic_state_layout_empty);
+            emptyImageView.setImageAndDecodeBounds(ResourceTable.Media_ic_state_layout_empty);
         }
-        addView(emptyView);
-        /******************************************************************************************/
+        addComponent(emptyView);
+
 
     }
 
-    private void checkIsContentView(View view) {
+    /**
+     * Function to get Element value from attribute.
+     *
+     * @param name String name
+     * @return value
+     */
+    private static Element getElementFromAttr(AttrSet attrs, String name) {
+        Element value = null;
+        try {
+            if (attrs.getAttr(name).isPresent() && attrs.getAttr(name).get() != null) {
+                value = attrs.getAttr(name).get().getElement();
+            }
+        } catch (Exception ignore) {
+            // pass
+        }
+        return value;
+    }
+
+    private void checkIsContentView(Component view) {
         if (contentView == null && view != errorView && view != progressView && view != emptyView) {
             contentView = view;
             currentShowingView = contentView;
         }
     }
 
-    public ImageView getErrorImageView() {
+    public Image getErrorImageView() {
         return errorImageView;
     }
 
-    public ImageView getEmptyImageView() {
+    public Image getEmptyImageView() {
         return emptyImageView;
     }
 
+
+    /**
+     * switch the animation provider.
+     *
+     * @param viewSwitchAnimProvider ViewAnimProvider
+     */
     public void setViewSwitchAnimProvider(ViewAnimProvider viewSwitchAnimProvider) {
         if (viewSwitchAnimProvider != null) {
             this.showAnimation = viewSwitchAnimProvider.showAnimation();
@@ -162,93 +173,134 @@ public class StateLayout extends FrameLayout {
     }
 
     private boolean shouldPlayAnim = true;
-    private Animation hideAnimation;
-    private Animation showAnimation;
+    private AnimatorProperty hideAnimation;
+    private AnimatorProperty showAnimation;
 
-    public Animation getShowAnimation() {
+    public AnimatorProperty getShowAnimation() {
         return showAnimation;
     }
 
-    public void setShowAnimation(Animation showAnimation) {
+    public void setShowAnimation(AnimatorProperty showAnimation) {
         this.showAnimation = showAnimation;
     }
 
-    public Animation getHideAnimation() {
+    public Animator getHideAnimation() {
         return hideAnimation;
     }
 
-    public void setHideAnimation(Animation hideAnimation) {
+    public void setHideAnimation(AnimatorProperty hideAnimation) {
         this.hideAnimation = hideAnimation;
     }
 
-    private void switchWithAnimation(final View toBeShown) {
-        final View toBeHided = currentShowingView;
-        if (toBeHided == toBeShown)
+    private void switchWithAnimation(final Component toBeShown) {
+        final Component toBeHided = currentShowingView;
+        if (toBeHided == toBeShown) {
             return;
+        }
         if (shouldPlayAnim) {
-            if (toBeHided != null) {
-                if (hideAnimation != null) {
-                    hideAnimation.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            toBeHided.setVisibility(GONE);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                    hideAnimation.setFillAfter(false);
-                    toBeHided.startAnimation(hideAnimation);
-                } else
-                    toBeHided.setVisibility(GONE);
-            }
-            if (toBeShown != null) {
-                if (toBeShown.getVisibility() != VISIBLE)
-                    toBeShown.setVisibility(VISIBLE);
-                currentShowingView = toBeShown;
-                if (showAnimation != null) {
-                    showAnimation.setFillAfter(false);
-                    toBeShown.startAnimation(showAnimation);
-                }
-            }
+            playAnimationAndSwitch(toBeHided, toBeShown);
         } else {
             if (toBeHided != null) {
-                toBeHided.setVisibility(GONE);
+                toBeHided.setVisibility(HIDE);
             }
             if (toBeShown != null) {
                 currentShowingView = toBeShown;
                 toBeShown.setVisibility(VISIBLE);
             }
         }
+    }
+
+    private void playAnimationAndSwitch(Component toBeHidden, Component toBeShown) {
+        if (toBeHidden != null) {
+            if (hideAnimation != null) {
+                hideAnimation.setStateChangedListener(new Animator.StateChangedListener() {
+                    //#region ignore
+                    @Override
+                    public void onStart(Animator animator) {
+                        // pass
+                    }
+
+                    @Override
+                    public void onStop(Animator animator) {
+                        // pass
+                    }
+
+                    @Override
+                    public void onCancel(Animator animator) {
+                        // pass
+                    }
+
+                    @Override
+                    public void onPause(Animator animator) {
+                        // pass
+                    }
+
+                    @Override
+                    public void onResume(Animator animator) {
+                        // pass
+                    }
+                    //#endregion ignore
+
+                    @Override
+                    public void onEnd(Animator animator) {
+                        toBeHidden.setVisibility(HIDE);
+                    }
+
+                });
+                hideAnimation.setTarget(toBeHidden);
+                hideAnimation.start();
+            } else {
+                toBeHidden.setVisibility(HIDE);
+            }
+        }
+        if (toBeShown != null) {
+            if (toBeShown.getVisibility() != VISIBLE) {
+                toBeShown.setVisibility(VISIBLE);
+            }
+            currentShowingView = toBeShown;
+            if (showAnimation != null) {
+                showAnimation.setTarget(toBeShown);
+                showAnimation.start();
+            }
+        }
 
     }
 
     public void setEmptyContentViewMargin(int left, int top, int right, int bottom) {
-        ((LinearLayout.LayoutParams) emptyImageView.getLayoutParams()).setMargins(left, top, right, bottom);
+        emptyImageView.getLayoutConfig().setMargins(left, top, right, bottom);
     }
 
     public void setErrorContentViewMargin(int left, int top, int right, int bottom) {
-        ((LinearLayout.LayoutParams) errorImageView.getLayoutParams()).setMargins(left, top, right, bottom);
+        errorImageView.getLayoutConfig().setMargins(left, top, right, bottom);
     }
 
+    /**
+     * setProgressContentViewMargin.
+     *
+     * @param left   left margin
+     * @param top    top margin
+     * @param right  right margin
+     * @param bottom bottom margin
+     */
     public void setProgressContentViewMargin(int left, int top, int right, int bottom) {
-        if (progressBar != null)
-            ((LinearLayout.LayoutParams) progressBar.getLayoutParams()).setMargins(left, top, right, bottom);
+        if (progressBar != null) {
+            progressBar.getLayoutConfig().setMargins(left, top, right, bottom);
+        }
     }
 
+    /**
+     * setInfoContentViewMargin.
+     *
+     * @param left   left margin
+     * @param top    top margin
+     * @param right  right margin
+     * @param bottom bottom margin
+     */
     public void setInfoContentViewMargin(int left, int top, int right, int bottom) {
         setEmptyContentViewMargin(left, top, right, bottom);
         setErrorContentViewMargin(left, top, right, bottom);
         setProgressContentViewMargin(left, top, right, bottom);
     }
-
 
     public void showContentView() {
         switchWithAnimation(contentView);
@@ -258,10 +310,16 @@ public class StateLayout extends FrameLayout {
         showEmptyView(null);
     }
 
+    /**
+     * showEmptyView.
+     *
+     * @param msg message
+     */
     public void showEmptyView(String msg) {
         onHideContentView();
-        if (!TextUtils.isEmpty(msg))
+        if (msg != null && !msg.isEmpty()) {
             emptyTextView.setText(msg);
+        }
         switchWithAnimation(emptyView);
     }
 
@@ -269,10 +327,16 @@ public class StateLayout extends FrameLayout {
         showErrorView(null);
     }
 
+    /**
+     * showErrorView.
+     *
+     * @param msg message
+     */
     public void showErrorView(String msg) {
         onHideContentView();
-        if (msg != null)
+        if (msg != null) {
             errorTextView.setText(msg);
+        }
         switchWithAnimation(errorView);
     }
 
@@ -280,75 +344,66 @@ public class StateLayout extends FrameLayout {
         showProgressView(null);
     }
 
+    /**
+     * showProgressView.
+     *
+     * @param msg message
+     */
     public void showProgressView(String msg) {
         onHideContentView();
-        if (msg != null)
+        if (msg != null) {
             progressTextView.setText(msg);
+        }
         switchWithAnimation(progressView);
     }
 
-    public void setErrorAction(final OnClickListener onErrorButtonClickListener) {
-        errorView.setOnClickListener(onErrorButtonClickListener);
+    public void setErrorAction(final ClickedListener onErrorButtonClickListener) {
+        errorView.setClickedListener(onErrorButtonClickListener);
     }
 
-    public void setEmptyAction(final OnClickListener onEmptyButtonClickListener) {
-        emptyView.setOnClickListener(onEmptyButtonClickListener);
+    public void setEmptyAction(final ClickedListener onEmptyButtonClickListener) {
+        emptyView.setClickedListener(onEmptyButtonClickListener);
     }
 
-
-    public void setErrorAndEmptyAction(final OnClickListener errorAndEmptyAction) {
-        errorView.setOnClickListener(errorAndEmptyAction);
-        emptyView.setOnClickListener(errorAndEmptyAction);
+    public void setErrorAndEmptyAction(final ClickedListener errorAndEmptyAction) {
+        errorView.setClickedListener(errorAndEmptyAction);
+        emptyView.setClickedListener(errorAndEmptyAction);
     }
 
     protected void onHideContentView() {
         //Override me
     }
 
-
-    /**
-     * addView
-     */
-
+    //#region add component
     @Override
-    public void addView(View child) {
-        checkIsContentView(child);
-        super.addView(child);
+    public void addComponent(Component childComponent) {
+        checkIsContentView(childComponent);
+        super.addComponent(childComponent);
     }
 
     @Override
-    public void addView(View child, int index) {
-        checkIsContentView(child);
-        super.addView(child, index);
+    public void addComponent(Component childComponent, int width, int height) {
+        checkIsContentView(childComponent);
+        super.addComponent(childComponent, width, height);
     }
 
     @Override
-    public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        checkIsContentView(child);
-        super.addView(child, index, params);
+    public void addComponent(Component childComponent, ComponentContainer.LayoutConfig layoutConfig) {
+        checkIsContentView(childComponent);
+        super.addComponent(childComponent, layoutConfig);
     }
 
     @Override
-    public void addView(View child, ViewGroup.LayoutParams params) {
-        checkIsContentView(child);
-        super.addView(child, params);
+    public void addComponent(Component childComponent, int index, ComponentContainer.LayoutConfig layoutConfig) {
+        checkIsContentView(childComponent);
+        super.addComponent(childComponent, index, layoutConfig);
     }
 
     @Override
-    public void addView(View child, int width, int height) {
-        checkIsContentView(child);
-        super.addView(child, width, height);
+    public void addComponent(Component childComponent, int index) {
+        checkIsContentView(childComponent);
+        super.addComponent(childComponent, index);
     }
+    //#endregion add component
 
-    @Override
-    protected boolean addViewInLayout(View child, int index, ViewGroup.LayoutParams params) {
-        checkIsContentView(child);
-        return super.addViewInLayout(child, index, params);
-    }
-
-    @Override
-    protected boolean addViewInLayout(View child, int index, ViewGroup.LayoutParams params, boolean preventRequestLayout) {
-        checkIsContentView(child);
-        return super.addViewInLayout(child, index, params, preventRequestLayout);
-    }
 }

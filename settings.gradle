@@ -1,1 +1,1 @@
-include ':app', ':stateLayout'
+include ':entry', ':statelayout'

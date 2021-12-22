@@ -1,13 +1,14 @@
-package com.lufficc.stateLayout;
+package com.lufficc.statelayout;
 
-import android.view.animation.Animation;
+
+import ohos.agp.animation.AnimatorProperty;
 
 /**
  * Created by lufficc on 2016/8/26.
  */
 
 public interface ViewAnimProvider {
-    Animation showAnimation();
+    AnimatorProperty showAnimation();
 
-    Animation hideAnimation();
+    AnimatorProperty hideAnimation();
 }
