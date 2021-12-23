@@ -11,6 +11,14 @@
     {
       "name": "mainability_HelloWorld",
       "value": "Hello World"
+    },
+    {
+      "name": "btn_fade",
+      "value": "Fade"
+    },
+    {
+      "name": "btn_fade_scale",
+      "value": "Fade Scale"
     }
   ]
 }

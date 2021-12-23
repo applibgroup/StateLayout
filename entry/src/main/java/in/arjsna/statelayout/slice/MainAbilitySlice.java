@@ -40,18 +40,18 @@ public class MainAbilitySlice extends AbilitySlice {
         Text fadeText = (Text) findComponentById(ResourceTable.Id_fade);
         Text fadeScaleText = (Text) findComponentById(ResourceTable.Id_fade_scale);
 
-        fadeText.setText("✔ " + fadeText.getText());
+        fadeText.setText("✔ " + getString(ResourceTable.String_btn_fade));
 
         fadeText.setClickedListener(c -> {
             stateLayout.setViewSwitchAnimProvider(new FadeViewAnimProvider());
-            fadeScaleText.setText(fadeScaleText.getText().replace("✔ ", ""));
-            fadeText.setText("✔ " + fadeText.getText());
+            fadeScaleText.setText(getString(ResourceTable.String_btn_fade_scale));
+            fadeText.setText("✔ " + getString(ResourceTable.String_btn_fade));
         });
 
         fadeScaleText.setClickedListener(c -> {
             stateLayout.setViewSwitchAnimProvider(new FadeScaleViewAnimProvider());
-            fadeText.setText(fadeText.getText().replace("✔ ", ""));
-            fadeScaleText.setText("✔ " + fadeScaleText.getText());
+            fadeText.setText(getString(ResourceTable.String_btn_fade));
+            fadeScaleText.setText("✔ " + getString(ResourceTable.String_btn_fade_scale));
         });
     }
 

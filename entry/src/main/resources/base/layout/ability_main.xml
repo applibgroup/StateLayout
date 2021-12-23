@@ -94,7 +94,7 @@
                 ohos:width="match_content"
                 ohos:end_margin="10vp"
                 ohos:multiple_lines="true"
-                ohos:text="fade"
+                ohos:text="$string:btn_fade"
                 ohos:text_size="$float:text_size"/>
 
             <Button
@@ -103,7 +103,7 @@
                 ohos:width="match_content"
                 ohos:end_margin="10vp"
                 ohos:multiple_lines="true"
-                ohos:text="fade_scale"
+                ohos:text="$string:btn_fade_scale"
                 ohos:text_size="$float:text_size"/>
         </DirectionalLayout>
     </DirectionalLayout>
