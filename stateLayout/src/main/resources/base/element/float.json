@@ -1,0 +1,20 @@
+{
+  "float": [
+    {
+      "name": "image_size",
+      "value": "160vp"
+    },
+    {
+      "name": "progress_size",
+      "value": "80vp"
+    },
+    {
+      "name": "text_size",
+      "value": "56vp"
+    },
+    {
+      "name": "text_sm_size",
+      "value": "40vp"
+    }
+  ]
+}
